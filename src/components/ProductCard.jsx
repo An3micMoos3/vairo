@@ -1,26 +1,22 @@
 import { useState } from "react";
 import { stores } from "../data/stores";
 import { getAvailable } from "../utils/availability";
+import { productImage, PLACEHOLDER } from "../utils/imgUrl";
 
 function ProductCard({ product, storeCode, stock, onAdd }) {
-  // 1. Variants this store carries (null means "not carried")
   const carried = product.variants.filter(
     v => getAvailable(stock, storeCode, v.sku) !== null
   );
 
-  // 2. Start on the first variant with stock, otherwise the first one
   const firstInStock =
     carried.find(v => getAvailable(stock, storeCode, v.sku) > 0) ?? carried[0];
 
-  // 3. Card state
   const [selectedSku, setSelectedSku] = useState(firstInStock?.sku);
   const [qty, setQty] = useState(1);
 
-  // 4. Safety net
   const selected = carried.find(v => v.sku === selectedSku);
   if (!selected) return null;
 
-  // 5. Work out what to display
   const available = getAvailable(stock, storeCode, selected.sku);
   const outOfStock = available === 0;
   const lowStock = available > 0 && available <= 3;
@@ -32,7 +28,15 @@ function ProductCard({ product, storeCode, stock, onAdd }) {
 
   return (
     <div className="card">
-      <img src={product.image} alt={product.name} loading="lazy" />
+      <img
+        src={productImage(product)}
+        alt={product.name}
+        loading="lazy"
+        onError={e => {
+          // If the product photo is missing, fall back once to the placeholder
+          if (e.currentTarget.src !== PLACEHOLDER) e.currentTarget.src = PLACEHOLDER;
+        }}
+      />
       {product.ageRestricted && <span className="badge">18+</span>}
 
       <h3>{product.name}</h3>

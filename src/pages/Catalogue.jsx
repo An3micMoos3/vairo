@@ -7,11 +7,14 @@ import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
 import SortSelect from "../components/SortSelect";
 import FilterPanel from "../components/FilterPanel";
+import { useCart } from "../context/CartContext";
+import { getAvailable } from "../utils/availability";
 
 function Catalogue() {
   const { code } = useParams();
   const [params, setParams] = useSearchParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { cart, addItem, clearCart } = useCart();
 
   // 1. Read everything from the URL
   const search   = params.get("q") ?? "";
@@ -57,8 +60,16 @@ function Catalogue() {
 
   const activeCount = [category, brand, nic, inStock].filter(Boolean).length;
 
-  function handleAdd(sku, qty) {
-    console.log("Add to basket:", sku, qty);
+    function handleAdd(sku, qty) {
+    const otherStore = cart.items.length > 0 && cart.storeCode !== code;
+    if (otherStore) {
+      const ok = window.confirm(
+        `Your basket has items from ${cart.storeCode}. Clear it and start a new basket for ${code}?`
+      );
+      if (!ok) return;
+      clearCart();
+    }
+    addItem(code, sku, qty, getAvailable(stock, code, sku));
   }
 
   return (

@@ -1,4 +1,5 @@
 import { getAvailable } from "./availability";   // top of the file
+import { products } from "../data/products"; 
 
 // Cheapest variant price, used for sorting and later for "from R..." labels
 export function lowestPrice(product) {
@@ -44,4 +45,12 @@ export function applyFilters(products, { code, stock, search, category, brand, n
 
     return true;
   });
+}
+
+export function findVariant(sku) {
+  for (const p of products) {
+    const v = p.variants.find(v => v.sku === sku);
+    if (v) return { product: p, variant: v };
+  }
+  return null;
 }

@@ -1,13 +1,23 @@
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { imgUrl } from "../utils/imgUrl";
 
 function Header() {
+  const { count } = useCart();
+
   return (
     <header className="header">
-      <Link to="/" className="logo">Viro Vapes</Link>
-      <nav>
+      <nav className="nav-left">
         <Link to="/">Home</Link>
         <Link to="/stores">Stores</Link>
-        <Link to="/cart">Cart</Link>
+      </nav>
+
+      <Link to="/" className="logo">
+        <img src={imgUrl("img/icon.png")} alt="Viro Vapes" />
+      </Link>
+
+      <nav className="nav-right">
+        <Link to="/cart">Cart{count > 0 && ` (${count})`}</Link>
       </nav>
     </header>
   );
