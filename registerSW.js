@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/viro-vapes/sw.js', { scope: '/viro-vapes/' })})}
