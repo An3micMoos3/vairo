@@ -26,4 +26,18 @@ export const juices = [
     ],
     attrs: { size: "60ml" },
   },
+    {
+    id: "NBL-LF-001",
+    name: "Cola Chill Longfill 60ml",
+    brand: "Nebula",
+    category: "juice",
+    image: "/img/placeholder.webp",
+    ageRestricted: true,
+    variants: [
+      { label: "3mg",  sku: makeSku({ brand: "NBL", type: "LF", number: 1, variant: "3" }),  priceCents: 17900 },
+      { label: "6mg",  sku: makeSku({ brand: "NBL", type: "LF", number: 1, variant: "6" }),  priceCents: 17900 },
+      { label: "12mg", sku: makeSku({ brand: "NBL", type: "LF", number: 1, variant: "12" }), priceCents: 17900 },
+    ],
+    attrs: { size: "60ml" },
+  },
 ];
