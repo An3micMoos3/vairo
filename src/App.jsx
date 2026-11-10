@@ -7,6 +7,8 @@ import FloatingCart from "./components/FloatingCart";
 import Home from "./pages/Home";
 import Stores from "./pages/Stores";
 import Catalogue from "./pages/Catalogue";
+import Search from "./pages/Search";
+import Specials from "./pages/Specials";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderPlaced from "./pages/OrderPlaced";
@@ -20,6 +22,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/stores" element={<Stores />} />
         <Route path="/store/:code" element={<Catalogue />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/specials" element={<Specials />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmed" element={<OrderPlaced />} />
