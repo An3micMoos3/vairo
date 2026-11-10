@@ -2,21 +2,19 @@ import { useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { products } from "../data/products";
 import { stock } from "../data/stock";
-import { sorters, applyFilters } from "../utils/catalogue";
+import { makeSorters, applyFilters } from "../utils/catalogue";
+import { useAddToCart } from "../hooks/useAddToCart";
 import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
 import SortSelect from "../components/SortSelect";
 import FilterPanel from "../components/FilterPanel";
-import { useCart } from "../context/CartContext";
-import { getAvailable } from "../utils/availability";
 
 function Catalogue() {
   const { code } = useParams();
   const [params, setParams] = useSearchParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { cart, addItem, clearCart } = useCart();
+  const handleAdd = useAddToCart(code);
 
-  // 1. Read everything from the URL
   const search   = params.get("q") ?? "";
   const sort     = params.get("sort") ?? "name-asc";
   const category = params.get("category") ?? "";
@@ -24,12 +22,11 @@ function Catalogue() {
   const nic      = params.get("nic") ?? "";
   const inStock  = params.get("instock") === "1";
 
-  // 2. Change one setting in the URL
   function update(key, value) {
     const next = new URLSearchParams(params);
     if (value) next.set(key, value);
     else next.delete(key);
-    if (key === "category") next.delete("nic");   // nicotine only applies to juices
+    if (key === "category") next.delete("nic");
     setParams(next, { replace: true });
   }
 
@@ -40,7 +37,6 @@ function Catalogue() {
     setParams(next, { replace: true });
   }
 
-  // 3. Options for the dropdowns, based on what THIS store carries
   const storeStock = stock[code] ?? {};
   const carriedProducts = products.filter(p => p.variants.some(v => v.sku in storeStock));
 
@@ -54,23 +50,11 @@ function Catalogue() {
     )].sort((a, b) => parseFloat(a) - parseFloat(b)),
   };
 
-  // 4. Filter, then sort
+  const sorters = makeSorters(code);
   const list = applyFilters(products, { code, stock, search, category, brand, nic, inStock })
     .sort(sorters[sort] ?? sorters["name-asc"]);
 
   const activeCount = [category, brand, nic, inStock].filter(Boolean).length;
-
-    function handleAdd(sku, qty) {
-    const otherStore = cart.items.length > 0 && cart.storeCode !== code;
-    if (otherStore) {
-      const ok = window.confirm(
-        `Your basket has items from ${cart.storeCode}. Clear it and start a new basket for ${code}?`
-      );
-      if (!ok) return;
-      clearCart();
-    }
-    addItem(code, sku, qty, getAvailable(stock, code, sku));
-  }
 
   return (
     <main>

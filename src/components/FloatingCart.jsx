@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { findVariant } from "../utils/catalogue";
+import { getPrice } from "../utils/pricing";
 import { formatRand } from "../utils/format";
 
-// Pages where the floating button would just be in the way
 const HIDDEN_ON = ["/cart", "/checkout", "/order-confirmed"];
 
 function FloatingCart() {
@@ -12,10 +12,11 @@ function FloatingCart() {
 
   if (count === 0 || HIDDEN_ON.includes(pathname)) return null;
 
-  // Running total from the basket (names and prices come from the data, not the basket)
   const subtotal = cart.items.reduce((sum, item) => {
     const found = findVariant(item.sku);
-    return found ? sum + found.variant.priceCents * item.qty : sum;
+    if (!found) return sum;
+    const { finalCents } = getPrice(found.product, found.variant, cart.storeCode);
+    return sum + finalCents * item.qty;
   }, 0);
 
   return (

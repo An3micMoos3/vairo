@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { stores } from "../data/stores";
 import { getAvailable } from "../utils/availability";
+import { getPrice, badgeText } from "../utils/pricing";
+import { formatRand } from "../utils/format";
 import { productImage, PLACEHOLDER } from "../utils/imgUrl";
 
 function ProductCard({ product, storeCode, stock, onAdd }) {
@@ -21,6 +23,7 @@ function ProductCard({ product, storeCode, stock, onAdd }) {
   const outOfStock = available === 0;
   const lowStock = available > 0 && available <= 3;
   const label = outOfStock ? "Sold out" : lowStock ? "Low stock" : "In stock";
+  const price = getPrice(product, selected, storeCode);
 
   const elsewhere = stores
     .filter(s => s.code !== storeCode && getAvailable(stock, s.code, selected.sku) > 0)
@@ -33,15 +36,19 @@ function ProductCard({ product, storeCode, stock, onAdd }) {
         alt={product.name}
         loading="lazy"
         onError={e => {
-          // If the product photo is missing, fall back once to the placeholder
           if (e.currentTarget.src !== PLACEHOLDER) e.currentTarget.src = PLACEHOLDER;
         }}
       />
       {product.ageRestricted && <span className="badge">18+</span>}
+      {price.discount && <span className="deal">{badgeText(price.discount)}</span>}
 
       <h3>{product.name}</h3>
       <p className="brand">{product.brand}</p>
-      <p className="price">R{(selected.priceCents / 100).toFixed(2)}</p>
+
+      <p className="price">
+        {price.discount && <span className="was">{formatRand(price.originalCents)}</span>}
+        <span className={price.discount ? "now" : ""}>{formatRand(price.finalCents)}</span>
+      </p>
 
       <div className="variants">
         {carried.map(v => (

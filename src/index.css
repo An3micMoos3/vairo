@@ -1,9 +1,27 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body { 
-  font-family: system-ui, sans-serif; 
-  background: #111; 
-  color: #eee; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, sans-serif;
+    color: #eee;
+
+    background-color: #111;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 0, 0, 0.063),
+            rgba(0, 0, 0, 0.056)
+        ),
+        url("/img/background/website-bg.webp");
+
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
 
 a {
    color: inherit; 
@@ -234,3 +252,23 @@ body { padding-bottom: 80px; }
 .chip.in  { color: #2ecc71; border-color: #2ecc71; }
 .chip.low { color: #e67e22; border-color: #e67e22; }
 .chip.out { color: #888; border-color: #555; text-decoration: line-through; }
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -1;
+  background:
+    linear-gradient(rgba(17, 17, 17, 0.78), rgba(17, 17, 17, 0.92)),
+    url("./assets/bg.jpg") center / cover no-repeat;
+}
+.deal { position: absolute; top: 20px; left: 20px; background: #27ae60; color: #fff;
+        padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+.price .was { text-decoration: line-through; color: #888; font-weight: 400; margin-right: 8px; }
+.price .now { color: #2ecc71; }
+
+.store-pick { display: flex; align-items: center; gap: 10px; margin-top: 12px; color: #bbb; }
+.campaign { margin-top: 28px; }
+.campaign-head { display: flex; justify-content: space-between; align-items: flex-start;
+                 gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.campaign-head p { color: #bbb; margin-top: 4px; }
+.deal-inline { background: #27ae60; color: #fff; padding: 2px 8px; border-radius: 4px;
+               font-size: 0.8rem; margin-left: 6px; vertical-align: middle; }
+.ends { color: #e67e22; font-size: 0.9rem; }
